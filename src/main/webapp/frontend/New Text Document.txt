@@ -1,0 +1,162 @@
+// -------------------- Data --------------------
+let reservations = [];
+let currentUser = null;
+
+// Sample user for login
+const users = [
+  { username: "admin", password: "admin123" }
+];
+
+// -------------------- Functions --------------------
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("login-msg");
+
+  const user = users.find(u => u.username === username && u.password === password);
+  if(user) {
+    currentUser = user;
+    document.getElementById("login-section").classList.add("hidden");
+    document.getElementById("menu-section").classList.remove("hidden");
+    msg.textContent = "";
+  } else {
+    msg.textContent = "Invalid username or password!";
+  }
+}
+
+// -------------------- Menu Options --------------------
+function showAddReservation() {
+  const content = document.getElementById("content-section");
+  content.innerHTML = `
+    <h3>Add New Reservation</h3>
+    <input type="text" id="guestName" placeholder="Guest Name">
+    <input type="text" id="guestAddress" placeholder="Guest Address">
+    <input type="text" id="contactNumber" placeholder="Contact Number">
+    <input type="text" id="roomType" placeholder="Room Type">
+    <input type="date" id="checkIn">
+    <input type="date" id="checkOut">
+    <button onclick="addReservation()">Save Reservation</button>
+    <p id="reservation-msg"></p>
+  `;
+  content.classList.remove("hidden");
+}
+
+function addReservation() {
+  const guestName = document.getElementById("guestName").value;
+  const guestAddress = document.getElementById("guestAddress").value;
+  const contactNumber = document.getElementById("contactNumber").value;
+  const roomType = document.getElementById("roomType").value;
+  const checkIn = document.getElementById("checkIn").value;
+  const checkOut = document.getElementById("checkOut").value;
+  const msg = document.getElementById("reservation-msg");
+
+  if(!guestName || !guestAddress || !contactNumber || !roomType || !checkIn || !checkOut) {
+    msg.textContent = "Please fill all fields!";
+    msg.style.color = "red";
+    return;
+  }
+
+  const reservationNumber = reservations.length + 1;
+  reservations.push({ reservationNumber, guestName, guestAddress, contactNumber, roomType, checkIn, checkOut });
+
+  msg.textContent = `Reservation added! Reservation Number: ${reservationNumber}`;
+  msg.style.color = "green";
+
+  document.getElementById("guestName").value = "";
+  document.getElementById("guestAddress").value = "";
+  document.getElementById("contactNumber").value = "";
+  document.getElementById("roomType").value = "";
+  document.getElementById("checkIn").value = "";
+  document.getElementById("checkOut").value = "";
+}
+
+// -------------------- Display Reservation --------------------
+function showDisplayReservation() {
+  const content = document.getElementById("content-section");
+  content.innerHTML = `
+    <h3>Display Reservation</h3>
+    <input type="number" id="resNumber" placeholder="Enter Reservation Number">
+    <button onclick="displayReservation()">Display</button>
+    <div id="reservation-details"></div>
+  `;
+  content.classList.remove("hidden");
+}
+
+function displayReservation() {
+  const resNumber = Number(document.getElementById("resNumber").value);
+  const detailsDiv = document.getElementById("reservation-details");
+  const res = reservations.find(r => r.reservationNumber === resNumber);
+
+  if(res) {
+    detailsDiv.innerHTML = `
+      <table>
+        <tr><th>Reservation No.</th><td>${res.reservationNumber}</td></tr>
+        <tr><th>Name</th><td>${res.guestName}</td></tr>
+        <tr><th>Address</th><td>${res.guestAddress}</td></tr>
+        <tr><th>Contact</th><td>${res.contactNumber}</td></tr>
+        <tr><th>Room Type</th><td>${res.roomType}</td></tr>
+        <tr><th>Check-In</th><td>${res.checkIn}</td></tr>
+        <tr><th>Check-Out</th><td>${res.checkOut}</td></tr>
+      </table>
+    `;
+  } else {
+    detailsDiv.innerHTML = `<p style="color:red">Reservation not found!</p>`;
+  }
+}
+
+// -------------------- Calculate Bill --------------------
+function showCalculateBill() {
+  const content = document.getElementById("content-section");
+  content.innerHTML = `
+    <h3>Calculate Bill</h3>
+    <input type="number" id="billResNumber" placeholder="Enter Reservation Number">
+    <button onclick="calculateBill()">Calculate</button>
+    <div id="bill-result"></div>
+  `;
+  content.classList.remove("hidden");
+}
+
+function calculateBill() {
+  const resNumber = Number(document.getElementById("billResNumber").value);
+  const res = reservations.find(r => r.reservationNumber === resNumber);
+  const resultDiv = document.getElementById("bill-result");
+
+  if(res) {
+    const checkIn = new Date(res.checkIn);
+    const checkOut = new Date(res.checkOut);
+    const nights = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
+    let rate = 100; // default rate per night
+    if(res.roomType.toLowerCase() === "suite") rate = 200;
+    if(res.roomType.toLowerCase() === "deluxe") rate = 150;
+
+    const total = nights * rate;
+
+    resultDiv.innerHTML = `
+      <p>Total Nights: ${nights}</p>
+      <p>Room Rate: $${rate} per night</p>
+      <h4>Total Bill: $${total}</h4>
+    `;
+  } else {
+    resultDiv.innerHTML = `<p style="color:red">Reservation not found!</p>`;
+  }
+}
+
+// -------------------- Help --------------------
+function showHelp() {
+  const content = document.getElementById("content-section");
+  content.innerHTML = `
+    <h3>Help Section</h3>
+    <p>1. Login with your username and password.</p>
+    <p>2. Use "Add New Reservation" to register guests.</p>
+    <p>3. Use "Display Reservation" to check a reservation.</p>
+    <p>4. Use "Calculate & Print Bill" to calculate the total cost.</p>
+    <p>5. Use "Exit" to close the system safely.</p>
+  `;
+  content.classList.remove("hidden");
+}
+
+// -------------------- Exit --------------------
+function exitSystem() {
+  alert("Exiting system. Goodbye!");
+  location.reload();
+}

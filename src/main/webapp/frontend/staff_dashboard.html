@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard - Ocean View Resort</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- optional external CSS -->
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Staff Dashboard - Ocean View Resort</h1>
+    </header>
+
+    <nav>
+      <span id="welcomeMsg">Welcome, Staff</span>
+      <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <div class="container">
+      <!-- CREATE RESERVATION -->
+      <section class="section">
+        <h2>Create Reservation</h2>
+        <div class="form-grid">
+          <input
+            type="text"
+            id="guestName"
+            placeholder="Guest Name *"
+            required
+          />
+          <input type="text" id="address" placeholder="Address" />
+          <input
+            type="tel"
+            id="contact"
+            placeholder="Contact Number *"
+            pattern="[0-9]{9,10}"
+            required
+          />
+          <select id="roomType">
+            <option value="">Select Room Type *</option>
+            <option value="Standard">Standard 8000.00/night</option>
+            <option value="Deluxe">Deluxe - 9000.00/night</option>
+            <option value="Superior">Superior - 12500.00/night</option>
+          </select>
+          <input type="date" id="checkIn" required min="" />
+          <input type="date" id="checkOut" required min="" />
+          <button id="createBtn">Create Reservation</button>
+        </div>
+        <p id="createMessage"></p>
+      </section>
+
+      <!-- VIEW & BILL -->
+      <section class="section">
+        <h2>Find Reservations</h2>
+        <div class="form-grid">
+          <input
+            type="text"
+            id="resId"
+            placeholder="Enter Reservation ID (optional)"
+          />
+          <button id="viewBtn">View Details</button>
+        </div>
+        <div id="reservationDetails"></div>
+      </section>
+
+      <!-- AVAILABLE ROOMS -->
+      <section class="section">
+        <h2>Available Rooms</h2>
+        <div class="room-grid" id="roomList">
+          <div class="card">
+            <img
+              src="https://images.unsplash.com/photo-1501117716987-c8e1ecb21023"
+              alt="Standard"
+            />
+            <h4>Standard</h4>
+            <p>8000.00 / night</p>
+          </div>
+          <div class="card">
+            <img
+              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"
+              alt="Deluxe"
+            />
+            <h4>Deluxe</h4>
+            <p>9000.00 / night</p>
+          </div>
+          <div class="card">
+            <img
+              src="https://images.unsplash.com/photo-1566665797739-1674de7a421a"
+              alt="Superior"
+            />
+            <h4>Superior</h4>
+            <p>12500.00 / night</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Main dashboard script -->
+    <script src="staff_dashboard.js"></script>
+    <!-- Generate PDF bills -->
+    <script src="generateBill.js"></script>
+  </body>
+</html>
